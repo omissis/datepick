@@ -50,6 +50,7 @@ function Datepicker() {
 		onDate: null, // Callback as a date is added to the datepicker
 		onShow: null, // Callback just before a datepicker is shown
 		onChangeMonthYear: null, // Callback when a new month/year is selected
+		afterChangeMonthYear: null, // Callback after a new month/year is selected
 		onSelect: null, // Callback when a date is selected
 		onClose: null, // Callback when a datepicker is closed
 		altField: null, // Alternate field to update in synch with the datepicker
@@ -1147,6 +1148,14 @@ $.extend(Datepicker.prototype, {
 				}
 				inst.div.html(this._generateContent(target[0], inst));
 				target.focus();
+			}
+			if (inst.inline || plugin.curInst == inst) {
+				if ($.isFunction(inst.options.afterChangeMonthYear) && (!inst.prevDate ||
+						inst.prevDate.getFullYear() != inst.drawDate.getFullYear() ||
+						inst.prevDate.getMonth() != inst.drawDate.getMonth())) {
+					inst.options.afterChangeMonthYear.apply(target[0],
+						[inst.drawDate.getFullYear(), inst.drawDate.getMonth() + 1]);
+				}
 			}
 		}
 	},
